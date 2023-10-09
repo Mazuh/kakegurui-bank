@@ -1,4 +1,4 @@
-name: Elixir CI
+name: Pipeline
 # Adapted from: https://fly.io/docs/elixir/advanced-guides/github-actions-elixir-ci-cd/
 
 on:
@@ -18,7 +18,7 @@ jobs:
     services:
       db:
         image: postgres:14
-        ports: ["5432:5432"]
+        ports: ["5433:5432"]
         env:
           POSTGRES_PASSWORD: postgres
         options: >-
