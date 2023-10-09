@@ -6,6 +6,7 @@ config :kakegurui_bank, KakeguruiBank.Repo,
   password: "postgres",
   hostname: "localhost",
   database: "kakegurui_bank_dev",
+  port: 5433,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

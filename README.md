@@ -1,18 +1,37 @@
-# KakeguruiBank
+# Kakegurui Bank
 
-To start your Phoenix server:
+> O teste que você irá realizar consiste em elaborar um servidor de registro de contas e
+> transações financeiras. Esse sistema deve conseguir receber vários pedidos de transação
+> simultaneamente, registrar de forma persistente o histórico de transações e retornar o
+> saldo atual de cada conta. O sistema deve manter a todo momento a consistência dos dados
+> fornecidos e ser capaz de escalar de forma simples.
+>
+> 🔗 https://github.com/appcumbuca/desafios/blob/c3a57889fe99d5a780afbd3421a7310c71334bf4/desafio-back-end.md
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Configuração de desenvolvimento local
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+Antes de tudo, alguns requisitos da máquina.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+- Elixir 1.15 com Erlang/OTP 26.1 (caso tiver ASDF, `asdf install` e pronto).
+- PostgreSQL 14 (na porta 5433).
 
-## Learn more
+Instalar dependências:
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+```sh
+mix setup
+```
+
+E iniciar o servidor:
+
+```sh
+mix phx.server
+
+# ou, em modo interativo:
+# iex -S mix phx.server
+```
+
+Agora abra [`localhost:4000`](http://localhost:4000) no browser e pronto.
+
+## Casos de uso
+
+TODO.
