@@ -1,7 +1,6 @@
 defmodule KakeguruiBankWeb.FinTransactionControllerTest do
   use KakeguruiBankWeb.ConnCase
 
-  import KakeguruiBank.FinancialFixtures
   import KakeguruiBank.AuthFixtures
 
   # @invalid_attrs %{
