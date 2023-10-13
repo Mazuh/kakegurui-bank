@@ -21,9 +21,11 @@ defmodule KakeguruiBankWeb.Router do
   scope "/api", KakeguruiBankWeb do
     pipe_through :api
 
+    # warning: public endpoints below
     get "/health", HealthController, :index
     post "/authentication", AuthenticationController, :index
     resources "/users", UserController, only: [:create]
+    # warning: public endpoints above
   end
 
   scope "/api", KakeguruiBankWeb do
