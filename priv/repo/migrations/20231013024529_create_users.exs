@@ -8,7 +8,7 @@ defmodule KakeguruiBank.Repo.Migrations.CreateUsers do
       add :cpf, :string
       add :hash_pass, :string
 
-      timestamps(inserted_at: true, updated_at: false)
+      timestamps(updated_at: false)
     end
 
     create unique_index(:users, [:cpf])

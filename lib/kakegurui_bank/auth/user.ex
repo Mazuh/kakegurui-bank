@@ -8,7 +8,7 @@ defmodule KakeguruiBank.Auth.User do
     field :cpf, :string
     field :hash_pass, :string
 
-    timestamps(inserted_at: true, updated_at: false)
+    timestamps(updated_at: false)
   end
 
   @doc false
