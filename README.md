@@ -30,8 +30,29 @@ mix phx.server
 # iex -S mix phx.server
 ```
 
-Agora abra [`localhost:4000`](http://localhost:4000) no browser e pronto.
+Agora, rode o health check:
+
+```sh
+curl http://localhost:4000/api/health
+```
+
+E pronto, isso deve retornar um JSON de `{"status":"ok"}` como teste de sanidade.
+
+## Testes automatizados
+
+```sh
+mix test
+```
+
+## Ambiente de entrega contínua
+
+TODO.
 
 ## Casos de uso
 
 TODO.
+
+## Licença
+
+Feito por [Marcell G. (Mazuh)](https://github.com/Mazuh/kakegurui-bank)
+sob [MIT License](https://github.com/Mazuh/kakegurui-bank/blob/main/LICENSE).
