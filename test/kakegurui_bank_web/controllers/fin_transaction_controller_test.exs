@@ -4,8 +4,6 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
   import KakeguruiBank.FinancialFixtures
   import KakeguruiBank.AuthFixtures
 
-  alias KakeguruiBank.Financial.FinTransaction
-
   # @invalid_attrs %{
   #   uuid: nil,
   #   sender_info_cpf: nil,
@@ -27,7 +25,7 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
 
   describe "create fin_transaction" do
     test "renders fin_transaction when data is valid", %{conn: conn} do
-      user = user_fixture(%{cpf: "111.111.111-11"})
+      user_fixture(%{cpf: "111.111.111-11"})
 
       create_attrs = %{
         "receiver_cpf" => "111.111.111-11",
@@ -55,7 +53,7 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
     end
 
     test "renders errors if amount is negative", %{conn: conn} do
-      user = user_fixture(%{cpf: "111.111.111-11"})
+      user_fixture(%{cpf: "111.111.111-11"})
 
       create_attrs = %{
         "receiver_cpf" => "111.111.111-11",
@@ -66,10 +64,5 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
       response = json_response(conn, 400)
       assert response["message"] == "amount: must be greater than 0;"
     end
-  end
-
-  defp create_fin_transaction(_) do
-    fin_transaction = fin_transaction_fixture()
-    %{fin_transaction: fin_transaction}
   end
 end
