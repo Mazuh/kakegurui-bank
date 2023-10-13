@@ -11,9 +11,9 @@ defmodule KakeguruiBank.AuthFixtures do
     {:ok, user} =
       attrs
       |> Enum.into(%{
-        first_name: "some first_name",
-        last_name: "some last_name",
-        cpf: "some cpf",
+        first_name: "João",
+        last_name: "da Silva",
+        cpf: "052.490.668-87",
         hash_pass: "some hash_pass"
       })
       |> KakeguruiBank.Auth.create_user()

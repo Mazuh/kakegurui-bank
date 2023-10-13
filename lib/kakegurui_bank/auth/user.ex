@@ -16,5 +16,7 @@ defmodule KakeguruiBank.Auth.User do
     user
     |> cast(attrs, [:first_name, :last_name, :cpf, :hash_pass])
     |> validate_required([:first_name, :last_name, :cpf, :hash_pass])
+    |> unique_constraint(:cpf)
+    |> validate_format(:cpf, ~r/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
   end
 end

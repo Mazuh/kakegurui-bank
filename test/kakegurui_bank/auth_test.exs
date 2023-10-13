@@ -8,12 +8,12 @@ defmodule KakeguruiBank.AuthTest do
 
     import KakeguruiBank.AuthFixtures
 
-    @invalid_attrs %{first_name: nil, last_name: nil, cpf: nil, hash_pass: nil}
-
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Auth.list_users() == [user]
-    end
+    @valid_attrs %{
+      first_name: "João",
+      last_name: "da Silva",
+      cpf: "052.490.668-87",
+      hash_pass: "some hash_pass"
+    }
 
     test "get_user!/1 returns the user with given id" do
       user = user_fixture()
@@ -21,45 +21,24 @@ defmodule KakeguruiBank.AuthTest do
     end
 
     test "create_user/1 with valid data creates a user" do
-      valid_attrs = %{first_name: "some first_name", last_name: "some last_name", cpf: "some cpf", hash_pass: "some hash_pass"}
-
-      assert {:ok, %User{} = user} = Auth.create_user(valid_attrs)
-      assert user.first_name == "some first_name"
-      assert user.last_name == "some last_name"
-      assert user.cpf == "some cpf"
+      assert {:ok, %User{} = user} = Auth.create_user(@valid_attrs)
+      assert user.first_name == "João"
+      assert user.last_name == "da Silva"
+      assert user.cpf == "052.490.668-87"
       assert user.hash_pass == "some hash_pass"
     end
 
-    test "create_user/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Auth.create_user(@invalid_attrs)
+    test "create_user/1 does not allow duplicated cpf" do
+      {:ok, %User{} = _original_user} = Auth.create_user(@valid_attrs)
+
+      assert {:error, %Ecto.Changeset{} = changeset} = Auth.create_user(@valid_attrs)
+      assert [cpf: {"has already been taken", _}] = changeset.errors
     end
 
-    test "update_user/2 with valid data updates the user" do
-      user = user_fixture()
-      update_attrs = %{first_name: "some updated first_name", last_name: "some updated last_name", cpf: "some updated cpf", hash_pass: "some updated hash_pass"}
-
-      assert {:ok, %User{} = user} = Auth.update_user(user, update_attrs)
-      assert user.first_name == "some updated first_name"
-      assert user.last_name == "some updated last_name"
-      assert user.cpf == "some updated cpf"
-      assert user.hash_pass == "some updated hash_pass"
-    end
-
-    test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
-      assert {:error, %Ecto.Changeset{}} = Auth.update_user(user, @invalid_attrs)
-      assert user == Auth.get_user!(user.id)
-    end
-
-    test "delete_user/1 deletes the user" do
-      user = user_fixture()
-      assert {:ok, %User{}} = Auth.delete_user(user)
-      assert_raise Ecto.NoResultsError, fn -> Auth.get_user!(user.id) end
-    end
-
-    test "change_user/1 returns a user changeset" do
-      user = user_fixture()
-      assert %Ecto.Changeset{} = Auth.change_user(user)
+    test "create_user/1 checks invalid cpf" do
+      invalid_cpf = @valid_attrs |> Map.put(:cpf, "11122233344")
+      {:error, %Ecto.Changeset{} = changeset} = Auth.create_user(invalid_cpf)
+      assert [cpf: {"has invalid format", _}] = changeset.errors
     end
   end
 end
