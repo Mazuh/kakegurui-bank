@@ -64,13 +64,17 @@ curl -X POST http://localhost:4000/api/users \
         "cpf": "052.490.668-87",
         "first_name": "João",
         "last_name": "da Silva",
-        "pass": "my secret"
+        "pass": "my secret",
+        "initial_balance": "1000.00"
     }'
 ```
 
 Não há listagem nem consulta, pois não foram especificadas, e dado o contexto de fintech
 pode implicar em um vazamento de dados. E nesse espírito o ID numérico auto-incrementado
 também não é disponibilizado, para não revelar por exemplo quantos usuários há na organização.
+
+O saldo inicial por `inicial_balance` é opcional e provavelmente só faz sentido neste
+contexto lúdico de experimentação.
 
 ### Autenticação
 

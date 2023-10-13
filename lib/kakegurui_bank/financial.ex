@@ -38,6 +38,13 @@ defmodule KakeguruiBank.Financial do
   """
   def get_fin_transaction!(id), do: Repo.get!(FinTransaction, id)
 
+  def list_fin_transactions_of_user_id!(user_id) do
+    Repo.all(
+      from t in FinTransaction,
+        where: t.sender_id == ^user_id or t.receiver_id == ^user_id
+    )
+  end
+
   @doc """
   Creates a fin_transaction.
 

@@ -8,6 +8,7 @@ defmodule KakeguruiBank.Auth.User do
     field :cpf, :string
     field :pass, :string, virtual: true
     field :hash_pass, :string
+    field :initial_amount, :decimal, virtual: true
 
     timestamps(updated_at: false)
   end
@@ -18,6 +19,7 @@ defmodule KakeguruiBank.Auth.User do
     |> validate_required([:first_name, :last_name, :cpf, :pass])
     |> unique_constraint(:cpf)
     |> validate_format(:cpf, ~r/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+    |> validate_number(:initial_amount, greater_than_or_equal_to: 0)
     |> put_hash_pass()
   end
 

@@ -7,6 +7,7 @@ defmodule KakeguruiBank.Auth do
   alias KakeguruiBank.Repo
 
   alias KakeguruiBank.Auth.User
+  alias KakeguruiBank.Financial
 
   @doc """
   Gets a single user.
@@ -41,9 +42,24 @@ defmodule KakeguruiBank.Auth do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
+    case %User{}
+         |> User.changeset(attrs)
+         |> Repo.insert() do
+      {:ok, user} ->
+        if initial_balance = attrs["initial_balance"] do
+          {:ok, _} =
+            Financial.create_fin_transaction(%{
+              "current_user" => user,
+              "amount" => initial_balance,
+              "receiver_cpf" => user.cpf
+            })
+        end
+
+        {:ok, user}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
