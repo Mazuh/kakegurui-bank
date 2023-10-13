@@ -4,18 +4,21 @@ defmodule KakeguruiBank.FinancialFixtures do
   entities via the `KakeguruiBank.Financial` context.
   """
 
+  import KakeguruiBank.AuthFixtures
+
   @doc """
   Generate a fin_transaction.
   """
   def fin_transaction_fixture(attrs \\ %{}) do
+    sender = user_fixture(%{cpf: "111.111.111-11"})
+    receiver = user_fixture(%{cpf: "222.222.222-22"})
+
     {:ok, fin_transaction} =
       attrs
       |> Enum.into(%{
-        uuid: "7488a646-e31f-11e4-aace-600308960662",
-        sender_info_cpf: "some sender_info_cpf",
-        receiver_info_cpf: "some receiver_info_cpf",
-        amount: "120.5",
-        processed_at: ~N[2023-10-12 11:26:00]
+        "receiver_cpf" => receiver.cpf,
+        "amount" => "120.5",
+        "current_user" => sender
       })
       |> KakeguruiBank.Financial.create_fin_transaction()
 

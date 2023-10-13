@@ -1,4 +1,6 @@
 defmodule KakeguruiBank.AuthFixtures do
+  use KakeguruiBankWeb.ConnCase
+
   @moduledoc """
   This module defines test helpers for creating
   entities via the `KakeguruiBank.Auth` context.
@@ -19,5 +21,11 @@ defmodule KakeguruiBank.AuthFixtures do
       |> KakeguruiBank.Auth.create_user()
 
     user
+  end
+
+  def inject_logged_user_fixture(conn) do
+    user = user_fixture()
+    token = KakeguruiBank.AuthToken.sign(user.cpf)
+    conn |> put_req_header("authorization", "Bearer #{token}")
   end
 end

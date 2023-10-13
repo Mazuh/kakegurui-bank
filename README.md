@@ -110,7 +110,7 @@ curl -X POST http://localhost:4000/api/fin_transactions \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN" \
     -d '{
-        "receiver_cpf": "052.490.668-87",
+        "receiver_cpf": "111.111.111-11",
         "amount": "1.99"
     }'
 ```

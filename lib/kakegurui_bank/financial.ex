@@ -6,6 +6,7 @@ defmodule KakeguruiBank.Financial do
   import Ecto.Query, warn: false
   alias KakeguruiBank.Repo
 
+  alias KakeguruiBank.Auth
   alias KakeguruiBank.Financial.FinTransaction
 
   @doc """
@@ -49,56 +50,28 @@ defmodule KakeguruiBank.Financial do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_fin_transaction(attrs \\ %{}) do
-    %FinTransaction{}
-    |> FinTransaction.changeset(attrs)
-    |> Repo.insert()
-  end
+  def create_fin_transaction(%{
+        "current_user" => current_user,
+        "amount" => amount,
+        "receiver_cpf" => receiver_cpf
+      }) do
+    sender = Auth.get_user_by_cpf(receiver_cpf)
 
-  @doc """
-  Updates a fin_transaction.
-
-  ## Examples
-
-      iex> update_fin_transaction(fin_transaction, %{field: new_value})
-      {:ok, %FinTransaction{}}
-
-      iex> update_fin_transaction(fin_transaction, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_fin_transaction(%FinTransaction{} = fin_transaction, attrs) do
-    fin_transaction
-    |> FinTransaction.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a fin_transaction.
-
-  ## Examples
-
-      iex> delete_fin_transaction(fin_transaction)
-      {:ok, %FinTransaction{}}
-
-      iex> delete_fin_transaction(fin_transaction)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_fin_transaction(%FinTransaction{} = fin_transaction) do
-    Repo.delete(fin_transaction)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking fin_transaction changes.
-
-  ## Examples
-
-      iex> change_fin_transaction(fin_transaction)
-      %Ecto.Changeset{data: %FinTransaction{}}
-
-  """
-  def change_fin_transaction(%FinTransaction{} = fin_transaction, attrs \\ %{}) do
-    FinTransaction.changeset(fin_transaction, attrs)
+    if sender == nil do
+      {:logical_error, "Receiver does not exist"}
+    else
+      %FinTransaction{}
+      |> FinTransaction.changeset(%{
+        uuid: Ecto.UUID.generate(),
+        amount: amount,
+        # TODO: async task may be an overkill here but it's a good plan! 🤘🏽
+        processed_at: DateTime.utc_now(),
+        sender_id: current_user.id,
+        sender_info_cpf: current_user.cpf,
+        receiver_id: sender.id,
+        receiver_info_cpf: sender.cpf
+      })
+      |> Repo.insert()
+    end
   end
 end

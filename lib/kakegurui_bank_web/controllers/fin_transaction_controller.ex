@@ -11,12 +11,38 @@ defmodule KakeguruiBankWeb.FinTransactionController do
     render(conn, :index, fin_transactions: fin_transactions)
   end
 
-  def create(conn, %{"fin_transaction" => fin_transaction_params}) do
-    with {:ok, %FinTransaction{} = fin_transaction} <-
-           Financial.create_fin_transaction(fin_transaction_params) do
-      conn
-      |> put_status(:created)
-      |> render(:show, fin_transaction: fin_transaction)
+  def create(conn, %{"amount" => amount, "receiver_cpf" => receiver_cpf}) do
+    case Financial.create_fin_transaction(%{
+           "current_user" => conn.assigns.current_user,
+           "amount" => amount,
+           "receiver_cpf" => receiver_cpf
+         }) do
+      {:ok, %FinTransaction{} = fin_transaction} ->
+        conn
+        |> put_status(:created)
+        |> render(:show, fin_transaction: fin_transaction)
+
+      {:logical_error, message} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{message: message})
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{message: changeset |> changeset_error_to_string()})
     end
+  end
+
+  defp changeset_error_to_string(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+    |> Enum.reduce("", fn {k, v}, acc ->
+      joined_errors = Enum.join(v, "; ")
+      "#{acc}#{k}: #{joined_errors};"
+    end)
   end
 end
