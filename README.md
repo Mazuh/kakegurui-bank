@@ -50,7 +50,49 @@ TODO.
 
 ## Casos de uso
 
-TODO.
+### Cadastro de conta
+
+```sh
+curl -X POST http://localhost:4000/api/users \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "cpf": "052.490.668-87",
+        "first_name": "João",
+        "last_name": "da Silva",
+        "hash_pass": "some hash_pass"
+    }'
+```
+
+### Autenticação
+
+```sh
+# todo
+```
+
+### Cadastro de transação
+
+```sh
+# todo
+```
+
+### Estorno de transação
+
+```sh
+# todo
+```
+
+### Busca de transações por data
+
+```sh
+# todo
+```
+
+### Visualização de saldo
+
+```sh
+# todo
+```
 
 ## Licença
 

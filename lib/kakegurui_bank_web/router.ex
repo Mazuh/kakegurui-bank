@@ -18,6 +18,7 @@ defmodule KakeguruiBankWeb.Router do
     pipe_through :api
 
     get "/health", HealthController, :index
+    resources "/users", UserController, only: [:create, :show]
   end
 
   scope "/", KakeguruiBankWeb do
