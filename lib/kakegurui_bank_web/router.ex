@@ -14,11 +14,23 @@ defmodule KakeguruiBankWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authenticated do
+    plug KakeguruiBankWeb.Plugs.AuthTokenPlug
+  end
+
   scope "/api", KakeguruiBankWeb do
     pipe_through :api
 
     get "/health", HealthController, :index
+    post "/authentication", AuthenticationController, :index
     resources "/users", UserController, only: [:create, :show]
+  end
+
+  scope "/api", KakeguruiBankWeb do
+    pipe_through :api
+    pipe_through :authenticated
+
+    get "/authentication", AuthenticationCheckController, :index
   end
 
   scope "/", KakeguruiBankWeb do

@@ -60,14 +60,36 @@ curl -X POST http://localhost:4000/api/users \
         "cpf": "052.490.668-87",
         "first_name": "João",
         "last_name": "da Silva",
-        "hash_pass": "some hash_pass"
+        "pass": "my secret"
     }'
 ```
 
 ### Autenticação
 
+Gere um token (com validade de 1 dia por razões "didáticas"):
+
 ```sh
-# todo
+curl -X POST http://localhost:4000/api/authentication \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "cpf": "052.490.668-87",
+        "pass": "my secret"
+    }'
+```
+
+Para facilitar, guarde o valor de token retornado (uma string dividida em três pontos) em uma
+variável para interpolação nas requests futuras:
+
+```sh
+KAKEGURUI_TOKEN='blablabla.blablabla.blablabla'
+```
+
+E teste o token, isso deverá imprimir o primeiro nome do usuário autenticado:
+
+```sh
+curl http://localhost:4000/api/authentication \
+    -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
 
 ### Cadastro de transação

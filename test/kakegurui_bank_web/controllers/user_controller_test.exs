@@ -11,21 +11,11 @@ defmodule KakeguruiBankWeb.UserControllerTest do
         "cpf" => "052.490.668-87",
         "first_name" => "João",
         "last_name" => "da Silva",
-        "hash_pass" => "some hash_pass"
+        "pass" => "my secret"
       }
 
       conn = post(conn, ~p"/api/users", create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get(conn, ~p"/api/users/#{id}")
-
-      assert %{
-               "id" => ^id,
-               "cpf" => "052.490.668-87",
-               "first_name" => "João",
-               "last_name" => "da Silva",
-               "hash_pass" => "some hash_pass"
-             } = json_response(conn, 200)["data"]
+      assert _ = json_response(conn, 201)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do

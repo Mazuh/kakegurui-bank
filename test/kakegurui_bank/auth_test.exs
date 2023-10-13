@@ -12,7 +12,7 @@ defmodule KakeguruiBank.AuthTest do
       first_name: "João",
       last_name: "da Silva",
       cpf: "052.490.668-87",
-      hash_pass: "some hash_pass"
+      pass: "some hash_pass"
     }
 
     test "get_user!/1 returns the user with given id" do
@@ -25,7 +25,6 @@ defmodule KakeguruiBank.AuthTest do
       assert user.first_name == "João"
       assert user.last_name == "da Silva"
       assert user.cpf == "052.490.668-87"
-      assert user.hash_pass == "some hash_pass"
     end
 
     test "create_user/1 does not allow duplicated cpf" do

@@ -14,7 +14,7 @@ defmodule KakeguruiBank.AuthFixtures do
         first_name: "João",
         last_name: "da Silva",
         cpf: "052.490.668-87",
-        hash_pass: "some hash_pass"
+        pass: "some hash_pass"
       })
       |> KakeguruiBank.Auth.create_user()
 
