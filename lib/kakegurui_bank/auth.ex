@@ -24,7 +24,7 @@ defmodule KakeguruiBank.Auth do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
-  def get_user_by_cpf!(id), do: Repo.one(User, cpf: id)
+  def get_user_by_cpf!(cpf), do: Repo.get_by!(User, cpf: cpf)
 
   @doc """
   Creates a user.
