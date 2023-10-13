@@ -17,7 +17,6 @@ defmodule KakeguruiBankWeb.FinTransactionJSON do
 
   defp data(%FinTransaction{} = fin_transaction) do
     %{
-      id: fin_transaction.id,
       uuid: fin_transaction.uuid,
       sender_info_cpf: fin_transaction.sender_info_cpf,
       receiver_info_cpf: fin_transaction.receiver_info_cpf,

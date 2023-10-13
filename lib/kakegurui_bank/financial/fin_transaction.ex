@@ -11,7 +11,7 @@ defmodule KakeguruiBank.Financial.FinTransaction do
     field :sender_id, :id
     field :receiver_id, :id
 
-    timestamps()
+    timestamps(updated_at: false)
   end
 
   @doc false

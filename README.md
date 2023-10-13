@@ -58,7 +58,7 @@ ser inválido (como um fácil "111.111.111-11" durante experimentos).
 
 ```sh
 curl -X POST http://localhost:4000/api/users \
-    -H 'accept: application/json' \
+    -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
         "cpf": "052.490.668-87",
@@ -68,13 +68,17 @@ curl -X POST http://localhost:4000/api/users \
     }'
 ```
 
+Não há listagem nem consulta, pois não foram especificadas, e dado o contexto de fintech
+pode implicar em um vazamento de dados. E nesse espírito o ID numérico auto-incrementado
+também não é disponibilizado, para não revelar por exemplo quantos usuários há na organização.
+
 ### Autenticação
 
 Gere um token (com validade de 1 dia, de novo para facilitar experimentos):
 
 ```sh
 curl -X POST http://localhost:4000/api/authentication \
-    -H 'accept: application/json' \
+    -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
         "cpf": "052.490.668-87",
@@ -89,17 +93,26 @@ variável para interpolação nas requests futuras:
 KAKEGURUI_TOKEN='blablabla.blablabla.blablabla'
 ```
 
-E teste o token, isso deverá imprimir o primeiro nome do usuário autenticado:
+E faça o teste de sanidade no token se quiser, esta rota deverá imprimir o
+primeiro nome do usuário autenticado:
 
 ```sh
 curl http://localhost:4000/api/authentication \
+    -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
 
 ### Cadastro de transação
 
 ```sh
-# todo
+curl -X POST http://localhost:4000/api/fin_transactions \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $KAKEGURUI_TOKEN" \
+    -d '{
+        "receiver_cpf": "052.490.668-87",
+        "amount": "1.99"
+    }'
 ```
 
 ### Estorno de transação
@@ -111,7 +124,9 @@ curl http://localhost:4000/api/authentication \
 ### Busca de transações por data
 
 ```sh
-# todo
+curl http://localhost:4000/api/fin_transactions \
+    -H 'Accept: application/json' \
+    -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
 
 ### Visualização de saldo

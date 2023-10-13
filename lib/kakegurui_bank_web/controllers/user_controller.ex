@@ -14,13 +14,6 @@ defmodule KakeguruiBankWeb.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Auth.get_user!(id)
-
-    conn
-    |> output_json(user)
-  end
-
   defp output_json(conn, %User{} = user) do
     conn
     |> json(%{
@@ -30,13 +23,6 @@ defmodule KakeguruiBankWeb.UserController do
         "last_name" => user.last_name,
         "inserted_at" => user.inserted_at
       }
-    })
-  end
-
-  defp output_json(conn, nil) do
-    conn
-    |> json(%{
-      "data" => nil
     })
   end
 end
