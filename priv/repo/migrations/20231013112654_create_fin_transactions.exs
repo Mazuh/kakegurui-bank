@@ -3,13 +3,13 @@ defmodule KakeguruiBank.Repo.Migrations.CreateFinTransactions do
 
   def change do
     create table(:fin_transactions) do
-      add :uuid, :uuid
-      add :amount, :decimal
-      add :processed_at, :naive_datetime
-      add :sender_id, references(:users, on_delete: :nothing)
-      add :sender_info_cpf, :string
-      add :receiver_id, references(:users, on_delete: :nothing)
-      add :receiver_info_cpf, :string
+      add :uuid, :uuid, null: false
+      add :amount, :decimal, null: false
+      add :processed_at, :naive_datetime, null: false
+      add :sender_id, references(:users, on_delete: :nothing), null: false
+      add :sender_info_cpf, :string, null: false
+      add :receiver_id, references(:users, on_delete: :nothing), null: false
+      add :receiver_info_cpf, :string, null: false
 
       timestamps(updated_at: false)
     end
