@@ -41,8 +41,41 @@ defmodule KakeguruiBank.Financial do
   def list_fin_transactions_of_user_id!(user_id) do
     Repo.all(
       from t in FinTransaction,
-        where: t.sender_id == ^user_id or t.receiver_id == ^user_id
+        where: t.sender_id == ^user_id or t.receiver_id == ^user_id,
+        order_by: [desc: t.processed_at]
     )
+  end
+
+  def get_balance_of_user_id!(user_id) do
+    query =
+      from t in FinTransaction,
+        where:
+          (t.sender_id == ^user_id or t.receiver_id == ^user_id) and not is_nil(t.processed_at),
+        select:
+          fragment(
+            "(
+              SUM(
+                CASE
+                  WHEN receiver_id = ?
+                  THEN amount
+                  ELSE 0
+                END
+              )
+              -
+              SUM(
+                CASE
+                  WHEN receiver_id != ? AND sender_id = ?
+                  THEN amount
+                  ELSE 0
+                END
+              )
+            ) AS balance",
+            ^user_id,
+            ^user_id,
+            ^user_id
+          )
+
+    Repo.one!(query)
   end
 
   @doc """

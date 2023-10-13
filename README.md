@@ -136,7 +136,9 @@ curl http://localhost:4000/api/fin_transactions \
 ### Visualização de saldo
 
 ```sh
-# todo
+curl http://localhost:4000/api/balance \
+    -H 'Accept: application/json' \
+    -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
 
 ## Licença

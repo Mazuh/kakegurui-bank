@@ -56,12 +56,12 @@ defmodule KakeguruiBank.FinancialTest do
           "amount" => "49.99"
         })
 
-      # exchange from receiver
-      {:ok, exchange} =
+      # cashback from receiver
+      {:ok, cashback} =
         Financial.create_fin_transaction(%{
           "current_user" => receiver,
           "receiver_cpf" => sender.cpf,
-          "amount" => "00.01"
+          "amount" => "00.05"
         })
 
       # out of scope transfer (to be ignored in the listing more ahead)
@@ -71,7 +71,7 @@ defmodule KakeguruiBank.FinancialTest do
         "amount" => "666.66"
       })
 
-      # the deposit, transfer and exchange should be listed but not the out of scope transaction
+      # the deposit, transfer and cashback should be listed but not the out of scope transaction
       fin_transactions = Financial.list_fin_transactions_of_user_id!(sender.id)
       assert length(fin_transactions) == 3
 
@@ -81,8 +81,11 @@ defmodule KakeguruiBank.FinancialTest do
       assert Enum.at(fin_transactions, 1).amount == Decimal.new("49.99")
       assert Enum.at(fin_transactions, 1).id == transfer.id
 
-      assert Enum.at(fin_transactions, 2).amount == Decimal.new("0.01")
-      assert Enum.at(fin_transactions, 2).id == exchange.id
+      assert Enum.at(fin_transactions, 2).amount == Decimal.new("0.05")
+      assert Enum.at(fin_transactions, 2).id == cashback.id
+
+      # its balance after all of this
+      assert Financial.get_balance_of_user_id!(sender.id) == Decimal.new("50.06")
     end
   end
 end

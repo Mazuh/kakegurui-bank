@@ -6,6 +6,7 @@ defmodule KakeguruiBank.Auth do
   import Ecto.Query, warn: false
   alias KakeguruiBank.Repo
 
+  alias KakeguruiBank.Auth
   alias KakeguruiBank.Auth.User
   alias KakeguruiBank.Financial
 
@@ -67,7 +68,7 @@ defmodule KakeguruiBank.Auth do
   matches some stored user (by its hashed password).
   """
   def verify_user(%{"cpf" => cpf, "pass" => pass}) do
-    user = Repo.one!(User, cpf: cpf)
+    user = Auth.get_user_by_cpf!(cpf)
 
     if user != nil and Argon2.check_pass(%{password_hash: user.hash_pass}, pass) do
       {:ok, user}

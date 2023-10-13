@@ -30,9 +30,12 @@ defmodule KakeguruiBankWeb.Router do
     pipe_through :api
     pipe_through :authenticated
 
-    get "/authentication", AuthenticationCheckController, :index
+    # auth
     resources "/users", UserController, only: [:show]
+    get "/authentication", AuthenticationCheckController, :index
+    # financial
     resources "/fin_transactions", FinTransactionController, only: [:index, :create]
+    get "/balance", BalanceController, :index
   end
 
   scope "/", KakeguruiBankWeb do
