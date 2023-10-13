@@ -52,6 +52,10 @@ TODO.
 
 ### Cadastro de conta
 
+Crie uma conta que servirá de acesso. O CPF será único e usado como identificador público (como
+alguns bancos fazem) durante transações mais tarde, e o formato precisa ser mascarado, porém pode
+ser inválido (como um fácil "111.111.111-11" durante experimentos).
+
 ```sh
 curl -X POST http://localhost:4000/api/users \
     -H 'accept: application/json' \
@@ -66,7 +70,7 @@ curl -X POST http://localhost:4000/api/users \
 
 ### Autenticação
 
-Gere um token (com validade de 1 dia por razões "didáticas"):
+Gere um token (com validade de 1 dia, de novo para facilitar experimentos):
 
 ```sh
 curl -X POST http://localhost:4000/api/authentication \

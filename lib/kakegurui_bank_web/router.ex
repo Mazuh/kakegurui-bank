@@ -23,7 +23,7 @@ defmodule KakeguruiBankWeb.Router do
 
     get "/health", HealthController, :index
     post "/authentication", AuthenticationController, :index
-    resources "/users", UserController, only: [:create, :show]
+    resources "/users", UserController, only: [:create]
   end
 
   scope "/api", KakeguruiBankWeb do
@@ -31,6 +31,8 @@ defmodule KakeguruiBankWeb.Router do
     pipe_through :authenticated
 
     get "/authentication", AuthenticationCheckController, :index
+    resources "/users", UserController, only: [:show]
+    resources "/fin_transactions", FinTransactionController, only: [:index, :create]
   end
 
   scope "/", KakeguruiBankWeb do
