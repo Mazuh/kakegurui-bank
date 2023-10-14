@@ -40,13 +40,17 @@ E pronto, isso deve retornar um JSON de `{"status":"ok"}` como teste de sanidade
 
 ## Testes automatizados
 
+Não muitos, mas todos os casos de uso estão cobertos,
+incluindo os exemplos aqui documentados e os
+de notável importância tipo de privacidade.
+
 ```sh
 mix test
 ```
 
-## Ambiente de entrega contínua
+## Ambiente de homologação
 
-TODO.
+A fazer.
 
 ## Casos de uso
 
