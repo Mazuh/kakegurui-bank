@@ -7,7 +7,23 @@ defmodule KakeguruiBankWeb.FinTransactionController do
   action_fallback KakeguruiBankWeb.FallbackController
 
   def index(conn, _params) do
-    fin_transactions = Financial.list_fin_transactions()
+    from_processed_at_date = conn.query_params["from_processed_at"]
+    {:ok, from_processed_at} = NaiveDateTime.from_iso8601("#{from_processed_at_date}T00:00:00")
+
+    to_processed_at_date = conn.query_params["to_processed_at"]
+
+    {:ok, to_processed_at} =
+      NaiveDateTime.from_iso8601("#{to_processed_at_date}T00:00:00")
+
+    to_processed_at = NaiveDateTime.add(to_processed_at, 1, :day)
+
+    fin_transactions =
+      Financial.list_fin_transactions(%{
+        "current_user" => conn.assigns.current_user,
+        "from_processed_at" => from_processed_at,
+        "to_processed_at" => to_processed_at
+      })
+
     render(conn, :index, fin_transactions: fin_transactions)
   end
 

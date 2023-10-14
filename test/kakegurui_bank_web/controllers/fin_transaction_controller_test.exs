@@ -11,10 +11,19 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
   end
 
   describe "index" do
-    test "lists all fin_transactions, including the inital balance for the current user", %{
+    test "lists fin_transactions by date, including the inital balance for the current user", %{
       conn: conn
     } do
-      conn = get(conn, ~p"/api/fin_transactions")
+      now =
+        NaiveDateTime.utc_now()
+        |> NaiveDateTime.to_date()
+
+      conn =
+        get(
+          conn,
+          "/api/fin_transactions?from_processed_at=#{now.year}-01-01&to_processed_at=#{now.year}-12-31"
+        )
+
       data = json_response(conn, 200)["data"]
       assert Enum.at(data, 0)["amount"] == "1000.00"
     end

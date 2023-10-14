@@ -57,7 +57,7 @@ alguns bancos fazem) durante transações mais tarde, e o formato precisa ser ma
 ser inválido (como um fácil "111.111.111-11" durante experimentos).
 
 ```sh
-curl -X POST http://localhost:4000/api/users \
+curl -X POST 'http://localhost:4000/api/users' \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -81,7 +81,7 @@ contexto lúdico de experimentação.
 Gere um token (com validade de 1 dia, de novo para facilitar experimentos):
 
 ```sh
-curl -X POST http://localhost:4000/api/authentication \
+curl -X POST 'http://localhost:4000/api/authentication' \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -101,7 +101,7 @@ E faça o teste de sanidade no token se quiser, esta rota deverá imprimir o
 primeiro nome do usuário autenticado:
 
 ```sh
-curl http://localhost:4000/api/authentication \
+curl 'http://localhost:4000/api/authentication' \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
@@ -112,7 +112,7 @@ Efetua uma transação financeira de um montante que seu usuário possui
 para algum outro usuário identificado através do CPF:
 
 ```sh
-curl -X POST http://localhost:4000/api/fin_transactions \
+curl -X POST 'http://localhost:4000/api/fin_transactions' \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN" \
@@ -159,18 +159,22 @@ Qualquer transação envolvendo seu usuário irá ser listada, inclusive as
 já estornadas para consulta histórica:
 
 ```sh
-curl http://localhost:4000/api/fin_transactions \
+curl 'http://localhost:4000/api/fin_transactions?from_processed_at=2023-01-01&to_processed_at=2023-12-31' \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
 
+O exemplo acima busca todas de 2023, os parâmetros `from_processed_at` e
+`to_processed_at`, seguem a máscara `"AAAA-MM-DD"`, são um intervalo
+inclusivo nas duas extremidades e são parâmetros obrigatórios.
+
 ### Visualização de saldo
 
 Valor total de suas transações efetuadas e não estornadas,
-o retorno é simples e facilmente cacheável:
+o retorno é bem simples:
 
 ```sh
-curl http://localhost:4000/api/balance \
+curl 'http://localhost:4000/api/balance' \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```

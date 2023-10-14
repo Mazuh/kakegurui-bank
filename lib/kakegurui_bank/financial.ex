@@ -22,6 +22,21 @@ defmodule KakeguruiBank.Financial do
     Repo.all(FinTransaction)
   end
 
+  def list_fin_transactions(%{
+        "current_user" => current_user,
+        "from_processed_at" => from_processed_at,
+        "to_processed_at" => to_processed_at
+      }) do
+    Repo.all(
+      from t in FinTransaction,
+        where:
+          (t.sender_id == ^current_user.id or t.receiver_id == ^current_user.id) and
+            t.processed_at >= ^from_processed_at and
+            t.processed_at <= ^to_processed_at,
+        order_by: [desc: t.processed_at]
+    )
+  end
+
   @doc """
   Gets a single fin_transaction.
 
