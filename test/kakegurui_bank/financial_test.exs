@@ -6,7 +6,6 @@ defmodule KakeguruiBank.FinancialTest do
   describe "fin_transactions" do
     alias KakeguruiBank.Financial.FinTransaction
 
-    import KakeguruiBank.FinancialFixtures
     import KakeguruiBank.AuthFixtures
 
     test "list_fin_transactions/0 returns all fin_transactions" do

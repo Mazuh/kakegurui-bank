@@ -102,33 +102,47 @@ defmodule KakeguruiBank.Financial do
         "amount" => amount,
         "receiver_cpf" => receiver_cpf
       }) do
-    sender_balance = get_balance_for_user_id!(sender.id)
-    receiver = Auth.get_user_by_cpf(receiver_cpf)
-    is_own_deposit = not is_nil(receiver) and sender.id == receiver.id
+    {:ok, fin_transaction} =
+      Repo.transaction(fn ->
+        sender_balance = get_balance_for_user_id!(sender.id)
+        receiver = Auth.get_user_by_cpf(receiver_cpf)
+        is_own_deposit = not is_nil(receiver) and sender.id == receiver.id
 
-    cond do
-      is_nil(receiver) ->
-        {:logical_error, "Receiver is not available"}
+        cond do
+          is_nil(receiver) ->
+            {:logical_error, "Receiver is not available"}
 
-      Decimal.lt?(amount, "0.0") ->
-        {:logical_error, "Only non-negative amounts are allowed"}
+          Decimal.lt?(sender_balance, "0.0") ->
+            {:logical_error, "Insufficient funds due to previous invalid state"}
 
-      not is_own_deposit && Decimal.lt?(sender_balance, amount) ->
-        {:logical_error, "Insufficient funds"}
+          Decimal.lt?(amount, "0.0") ->
+            {:logical_error, "Only non-negative amounts are allowed"}
 
-      true ->
-        %FinTransaction{}
-        |> FinTransaction.changeset(%{
-          uuid: Ecto.UUID.generate(),
-          amount: amount,
-          # TODO: async task may be an overkill here but it's a good plan! 🤘🏽
-          processed_at: DateTime.utc_now(),
-          sender_id: sender.id,
-          sender_info_cpf: sender.cpf,
-          receiver_id: receiver.id,
-          receiver_info_cpf: receiver.cpf
-        })
-        |> Repo.insert()
-    end
+          not is_own_deposit && Decimal.lt?(sender_balance, amount) ->
+            {:logical_error, "Insufficient funds"}
+
+          true ->
+            fin_transaction =
+              %FinTransaction{}
+              |> FinTransaction.changeset(%{
+                uuid: Ecto.UUID.generate(),
+                amount: amount,
+                processed_at: DateTime.utc_now(),
+                sender_id: sender.id,
+                sender_info_cpf: sender.cpf,
+                receiver_id: receiver.id,
+                receiver_info_cpf: receiver.cpf
+              })
+              |> Repo.insert()
+
+            if Decimal.lt?(get_balance_for_user_id!(sender.id), "0.0") do
+              Repo.rollback({:logical_error, "Insufficient funds due to invalid post state"})
+            else
+              fin_transaction
+            end
+        end
+      end)
+
+    fin_transaction
   end
 end
