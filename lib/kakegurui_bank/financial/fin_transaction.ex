@@ -15,7 +15,6 @@ defmodule KakeguruiBank.Financial.FinTransaction do
     timestamps(updated_at: false)
   end
 
-  @doc false
   def changeset(fin_transaction, attrs) do
     fin_transaction
     |> cast(attrs, [

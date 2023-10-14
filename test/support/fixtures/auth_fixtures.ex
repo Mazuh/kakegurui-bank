@@ -6,9 +6,6 @@ defmodule KakeguruiBank.AuthFixtures do
   entities via the `KakeguruiBank.Auth` context.
   """
 
-  @doc """
-  Generate a user.
-  """
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs

@@ -9,15 +9,6 @@ defmodule KakeguruiBank.Financial do
   alias KakeguruiBank.Auth
   alias KakeguruiBank.Financial.FinTransaction
 
-  @doc """
-  Returns the list of fin_transactions.
-
-  ## Examples
-
-      iex> list_fin_transactions()
-      [%FinTransaction{}, ...]
-
-  """
   def list_fin_transactions do
     Repo.all(FinTransaction)
   end
@@ -37,20 +28,6 @@ defmodule KakeguruiBank.Financial do
     )
   end
 
-  @doc """
-  Gets a single fin_transaction.
-
-  Raises `Ecto.NoResultsError` if the Fin transaction does not exist.
-
-  ## Examples
-
-      iex> get_fin_transaction!(123)
-      %FinTransaction{}
-
-      iex> get_fin_transaction!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_fin_transaction!(id), do: Repo.get!(FinTransaction, id)
 
   def list_fin_transactions_of_user_id!(user_id) do
@@ -146,18 +123,6 @@ defmodule KakeguruiBank.Financial do
     result
   end
 
-  @doc """
-  Creates a fin_transaction.
-
-  ## Examples
-
-      iex> create_fin_transaction(%{field: value})
-      {:ok, %FinTransaction{}}
-
-      iex> create_fin_transaction(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_fin_transaction(%{
         "current_user" => sender,
         "amount" => amount,

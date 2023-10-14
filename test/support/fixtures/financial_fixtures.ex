@@ -6,9 +6,6 @@ defmodule KakeguruiBank.FinancialFixtures do
 
   import KakeguruiBank.AuthFixtures
 
-  @doc """
-  Generate a fin_transaction.
-  """
   def fin_transaction_fixture(attrs \\ %{}) do
     sender = user_fixture(%{"cpf" => "111.111.111-11", "initial_balance" => 1000})
     receiver = user_fixture(%{"cpf" => "222.222.222-22", "initial_balance" => 1000})
