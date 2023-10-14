@@ -10,6 +10,7 @@ defmodule KakeguruiBank.Financial.FinTransaction do
     field :sender_info_cpf, :string
     field :receiver_id, :id
     field :receiver_info_cpf, :string
+    field :refunded_at, :naive_datetime
 
     timestamps(updated_at: false)
   end
@@ -24,7 +25,8 @@ defmodule KakeguruiBank.Financial.FinTransaction do
       :sender_id,
       :sender_info_cpf,
       :receiver_id,
-      :receiver_info_cpf
+      :receiver_info_cpf,
+      :refunded_at
     ])
     |> validate_required([
       :uuid,

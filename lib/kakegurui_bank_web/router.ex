@@ -21,11 +21,11 @@ defmodule KakeguruiBankWeb.Router do
   scope "/api", KakeguruiBankWeb do
     pipe_through :api
 
-    # warning: public endpoints below
+    # warning: PUBLIC endpoints below
     get "/health", HealthController, :index
     post "/authentication", AuthenticationController, :index
     resources "/users", UserController, only: [:create]
-    # warning: public endpoints above
+    # warning: PUBLIC endpoints above
   end
 
   scope "/api", KakeguruiBankWeb do
@@ -38,6 +38,7 @@ defmodule KakeguruiBankWeb.Router do
     # financial
     resources "/fin_transactions", FinTransactionController, only: [:index, :create]
     get "/balance", BalanceController, :index
+    post "/fin_transactions/:uuid/refund", FinTransactionRefundController, :index
   end
 
   scope "/", KakeguruiBankWeb do

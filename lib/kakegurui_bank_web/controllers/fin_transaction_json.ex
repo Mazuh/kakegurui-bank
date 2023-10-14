@@ -21,7 +21,8 @@ defmodule KakeguruiBankWeb.FinTransactionJSON do
       sender_info_cpf: fin_transaction.sender_info_cpf,
       receiver_info_cpf: fin_transaction.receiver_info_cpf,
       amount: fin_transaction.amount,
-      processed_at: fin_transaction.processed_at
+      processed_at: fin_transaction.processed_at,
+      refunded_at: fin_transaction.refunded_at
     }
   end
 end

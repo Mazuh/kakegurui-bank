@@ -71,7 +71,7 @@ curl -X POST http://localhost:4000/api/users \
 
 Não há listagem nem consulta, pois não foram especificadas, e dado o contexto de fintech
 pode implicar em um vazamento de dados. E nesse espírito o ID numérico auto-incrementado
-também não é disponibilizado, para não revelar por exemplo quantos usuários há na organização.
+também não é divulgado, para não revelar por exemplo quantos usuários há na organização.
 
 O saldo inicial por `inicial_balance` é opcional e provavelmente só faz sentido neste
 contexto lúdico de experimentação.
@@ -108,6 +108,9 @@ curl http://localhost:4000/api/authentication \
 
 ### Cadastro de transação
 
+Efetua uma transação financeira de um montante que seu usuário possui
+para algum outro usuário identificado através do CPF:
+
 ```sh
 curl -X POST http://localhost:4000/api/fin_transactions \
     -H 'Accept: application/json' \
@@ -119,13 +122,41 @@ curl -X POST http://localhost:4000/api/fin_transactions \
     }'
 ```
 
+Apenas para fins lúdicos, é permitido enviar dinheiro a si mesmo(a), como se
+fosse um "depósito".
+
 ### Estorno de transação
 
+Na busca por transação, armazene o UUID de alguma dentre as que você próprio originou:
+
 ```sh
-# todo
+KAKEGURUI_TRANSACTION='blabla-blabla-blabla-wadda-wadda'
 ```
 
+E chame o endpoint de estorno:
+
+```sh
+curl -X POST "http://localhost:4000/api/fin_transactions/$KAKEGURUI_TRANSACTION/refund" \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -H "Authorization: Bearer $KAKEGURUI_TOKEN"
+```
+
+Pelo endpoint de saldo dará para perceber a diferença.
+
+Também não é possível estornar mais de uma vez a mesma transação financeira,
+e não é possível reembolsar apenas uma fração mas sim todo o valor.
+
+Transações feitas a si mesmo(a), os já explicados "depósitos para experimentos", não são
+reembolsáveis.
+
+Mensagens de erro aqui serão um pouco ambíguas para não revelar demais, como por exemplo
+se a outra pessoa está sem dinheiro para fazer o reembolso.
+
 ### Busca de transações por data
+
+Qualquer transação envolvendo seu usuário irá ser listada, inclusive as
+já estornadas para consulta histórica:
 
 ```sh
 curl http://localhost:4000/api/fin_transactions \
@@ -134,6 +165,9 @@ curl http://localhost:4000/api/fin_transactions \
 ```
 
 ### Visualização de saldo
+
+Valor total de suas transações efetuadas e não estornadas,
+o retorno é simples e facilmente cacheável:
 
 ```sh
 curl http://localhost:4000/api/balance \
