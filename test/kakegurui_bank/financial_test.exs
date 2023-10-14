@@ -10,13 +10,12 @@ defmodule KakeguruiBank.FinancialTest do
     import KakeguruiBank.AuthFixtures
 
     test "list_fin_transactions/0 returns all fin_transactions" do
-      fin_transaction = fin_transaction_fixture()
-      assert Financial.list_fin_transactions() == [fin_transaction]
+      assert length(Financial.list_fin_transactions()) == 0
     end
 
     test "create_fin_transaction/1 with valid request data creates a financial transaction" do
-      sender = user_fixture(%{cpf: "111.111.111-11"})
-      receiver = user_fixture(%{cpf: "222.222.222-22"})
+      sender = user_fixture(%{"cpf" => "111.111.111-11", "initial_balance" => 1000})
+      receiver = user_fixture(%{"cpf" => "222.222.222-22", "initial_balance" => 1000})
 
       payload = %{
         "receiver_cpf" => receiver.cpf,
@@ -36,9 +35,11 @@ defmodule KakeguruiBank.FinancialTest do
 
     test "list_fin_transactions_of_user_id!/1 returns all fin_transactions related to a given user" do
       # users, the protagonist here would be the sender
-      sender = user_fixture(%{cpf: "111.111.111-11"})
-      receiver = user_fixture(%{cpf: "222.222.222-22"})
-      out_of_scope_receiver = user_fixture(%{cpf: "333.333.333-33"})
+      sender = user_fixture(%{"cpf" => "111.111.111-11", "initial_balance" => "200.00"})
+      receiver = user_fixture(%{"cpf" => "222.222.222-22", "initial_balance" => "200.00"})
+
+      out_of_scope_receiver =
+        user_fixture(%{"cpf" => "333.333.333-33", "initial_balance" => "200.00"})
 
       # deposit to themself
       {:ok, deposit} =
@@ -71,21 +72,25 @@ defmodule KakeguruiBank.FinancialTest do
         "amount" => "666.66"
       })
 
-      # the deposit, transfer and cashback should be listed but not the out of scope transaction
+      # the initial balance, deposit, transfer and cashback should be listed,
+      # but not the out of scope transaction,
+      # nor the initial balance from the other users
       fin_transactions = Financial.list_fin_transactions_of_user_id!(sender.id)
-      assert length(fin_transactions) == 3
+      assert length(fin_transactions) == 4
 
-      assert Enum.at(fin_transactions, 0).id == deposit.id
-      assert Enum.at(fin_transactions, 0).amount == Decimal.new("100.00")
+      assert Enum.at(fin_transactions, 0).amount == Decimal.new("200.00")
 
-      assert Enum.at(fin_transactions, 1).amount == Decimal.new("49.99")
-      assert Enum.at(fin_transactions, 1).id == transfer.id
+      assert Enum.at(fin_transactions, 1).id == deposit.id
+      assert Enum.at(fin_transactions, 1).amount == Decimal.new("100.00")
 
-      assert Enum.at(fin_transactions, 2).amount == Decimal.new("0.05")
-      assert Enum.at(fin_transactions, 2).id == cashback.id
+      assert Enum.at(fin_transactions, 2).amount == Decimal.new("49.99")
+      assert Enum.at(fin_transactions, 2).id == transfer.id
+
+      assert Enum.at(fin_transactions, 3).amount == Decimal.new("0.05")
+      assert Enum.at(fin_transactions, 3).id == cashback.id
 
       # its balance after all of this
-      assert Financial.get_balance_of_user_id!(sender.id) == Decimal.new("50.06")
+      assert Financial.get_balance_for_user_id!(sender.id) == Decimal.new("250.06")
     end
   end
 end

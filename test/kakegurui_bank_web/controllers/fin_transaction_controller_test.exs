@@ -3,28 +3,26 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
 
   import KakeguruiBank.AuthFixtures
 
-  # @invalid_attrs %{
-  #   uuid: nil,
-  #   sender_info_cpf: nil,
-  #   receiver_info_cpf: nil,
-  #   amount: nil,
-  #   processed_at: nil
-  # }
-
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json") |> inject_logged_user_fixture}
+    {:ok,
+     conn:
+       put_req_header(conn, "accept", "application/json")
+       |> inject_logged_user_fixture(%{"initial_balance" => "1000.00"})}
   end
 
   describe "index" do
-    test "lists all fin_transactions", %{conn: conn} do
+    test "lists all fin_transactions, including the inital balance for the current user", %{
+      conn: conn
+    } do
       conn = get(conn, ~p"/api/fin_transactions")
-      assert json_response(conn, 200)["data"] == []
+      data = json_response(conn, 200)["data"]
+      assert Enum.at(data, 0)["amount"] == "1000.00"
     end
   end
 
   describe "create fin_transaction" do
     test "renders fin_transaction when data is valid", %{conn: conn} do
-      user_fixture(%{cpf: "111.111.111-11"})
+      user_fixture(%{"cpf" => "111.111.111-11", "initial_balance" => "1000"})
 
       create_attrs = %{
         "receiver_cpf" => "111.111.111-11",
@@ -48,11 +46,11 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
 
       conn = post(conn, ~p"/api/fin_transactions", create_attrs)
       response = json_response(conn, 422)
-      assert response["message"] == "Receiver does not exist"
+      assert response["message"] == "Receiver is not available"
     end
 
     test "renders errors if amount is negative", %{conn: conn} do
-      user_fixture(%{cpf: "111.111.111-11"})
+      user_fixture(%{"cpf" => "111.111.111-11"})
 
       create_attrs = %{
         "receiver_cpf" => "111.111.111-11",
@@ -60,8 +58,8 @@ defmodule KakeguruiBankWeb.FinTransactionControllerTest do
       }
 
       conn = post(conn, ~p"/api/fin_transactions", create_attrs)
-      response = json_response(conn, 400)
-      assert response["message"] == "amount: must be greater than 0;"
+      response = json_response(conn, 422)
+      assert response["message"] == "Only non-negative amounts are allowed"
     end
   end
 end

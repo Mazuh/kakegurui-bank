@@ -4,7 +4,7 @@ defmodule KakeguruiBankWeb.BalanceController do
   alias KakeguruiBank.Financial
 
   def index(conn, _params) do
-    balance = Financial.get_balance_of_user_id!(conn.assigns.current_user.id)
+    balance = Financial.get_balance_for_user_id!(conn.assigns.current_user.id)
 
     conn
     |> put_status(:ok)

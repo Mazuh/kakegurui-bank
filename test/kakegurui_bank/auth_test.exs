@@ -22,7 +22,7 @@ defmodule KakeguruiBank.AuthTest do
     end
 
     test "get_user_by_cpf/1 returns the user by its CPF" do
-      user_fixture(%{cpf: "666.666.666-66"})
+      user_fixture(%{"cpf" => "666.666.666-66"})
       assert Auth.get_user_by_cpf("666.666.666-66").cpf == "666.666.666-66"
     end
 
@@ -31,7 +31,7 @@ defmodule KakeguruiBank.AuthTest do
     end
 
     test "get_user_by_cpf!/1 returns the user by its CPF" do
-      user_fixture(%{cpf: "666.666.666-66"})
+      user_fixture(%{"cpf" => "666.666.666-66"})
       assert Auth.get_user_by_cpf("666.666.666-66").cpf == "666.666.666-66"
     end
 
