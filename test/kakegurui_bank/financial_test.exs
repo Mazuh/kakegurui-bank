@@ -141,7 +141,7 @@ defmodule KakeguruiBank.FinancialTest do
         Financial.create_fin_transaction(payload)
 
       # refund it
-      assert {:ok, %FinTransaction{} = refunded} =
+      assert {:ok, %FinTransaction{}} =
                Financial.refund_fin_transaction(%{
                  "current_user_id" => sender.id,
                  "fin_transaction_uuid" => fin_transaction.uuid
@@ -184,7 +184,7 @@ defmodule KakeguruiBank.FinancialTest do
         "amount" => "900.00"
       }
 
-      {:ok, %FinTransaction{} = second_fin_transaction} =
+      {:ok, %FinTransaction{}} =
         Financial.create_fin_transaction(payload)
 
       # try to refund, but the other user doesnt have enough funds
@@ -212,7 +212,7 @@ defmodule KakeguruiBank.FinancialTest do
         "amount" => "950.00"
       }
 
-      {:ok, %FinTransaction{} = first_fin_transaction} =
+      {:ok, %FinTransaction{}} =
         Financial.create_fin_transaction(payload)
 
       # second transaction, receiver sends to someone else to hide the money
