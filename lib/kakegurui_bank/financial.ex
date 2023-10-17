@@ -84,6 +84,9 @@ defmodule KakeguruiBank.Financial do
       }) do
     {_, result} =
       Repo.transaction(fn ->
+        # Repo.query!("SET TRANSACTION ISOLATION LEVEL READ COMMITTED;")
+        Repo.query!("LOCK TABLE fin_transactions IN SHARE ROW EXCLUSIVE MODE;")
+
         fin_transaction =
           Repo.one(
             from t in FinTransaction,
@@ -92,7 +95,8 @@ defmodule KakeguruiBank.Financial do
                   t.sender_id == ^current_user_id and
                   t.receiver_id != ^current_user_id and
                   not is_nil(t.processed_at) and
-                  is_nil(t.refunded_at)
+                  is_nil(t.refunded_at),
+              lock: fragment("FOR UPDATE OF ?", t)
           )
 
         receiver_balance =
