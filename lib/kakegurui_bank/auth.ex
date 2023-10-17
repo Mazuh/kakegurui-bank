@@ -39,8 +39,9 @@ defmodule KakeguruiBank.Auth do
 
   def verify_user(%{"cpf" => cpf, "pass" => pass}) do
     user = Auth.get_user_by_cpf!(cpf)
+    {pass_result, _} = Argon2.check_pass(%{password_hash: user.hash_pass}, pass)
 
-    if user != nil and Argon2.check_pass(%{password_hash: user.hash_pass}, pass) do
+    if not is_nil(user) and pass_result == :ok do
       {:ok, user}
     else
       {:error, "User verification failed"}

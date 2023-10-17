@@ -9,7 +9,9 @@ defmodule KakeguruiBankWeb.AuthenticationController do
       |> json(%{token: token})
     else
       _ ->
-        {:error, gettext("email or password is in correct")}
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{token: "Incorrect email or password."})
     end
   end
 end
