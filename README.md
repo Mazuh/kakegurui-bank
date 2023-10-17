@@ -48,6 +48,8 @@ de notável importância tipo de privacidade.
 mix test
 ```
 
+Está sendo feita integração contínua, todo commit novo roda esses mesmos testes.
+
 ## Ambiente de homologação
 
 Está rodando em https://kakegurui-bank.fly.dev/ e pode pode ser substituído como URL
@@ -58,6 +60,9 @@ Exemplo de teste (pode demorar na primeira vez caso a máquina esteja em idle):
 ```sh
 curl https://kakegurui-bank.fly.dev/api/health
 ```
+
+Também foi configurada entrega contínua, então os commits da main estão indo parar
+nesse servidor aí.
 
 ## Casos de uso
 
