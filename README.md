@@ -50,9 +50,28 @@ mix test
 
 ## Ambiente de homologação
 
-A fazer.
+Está rodando em https://kakegurui-bank.fly.dev/ e pode pode ser substituído como URL
+base em todos os casos de uso abaixo.
+
+Exemplo de teste (pode demorar na primeira vez caso a máquina esteja em idle):
+
+```sh
+curl https://kakegurui-bank.fly.dev/api/health
+```
 
 ## Casos de uso
+
+Guarde a base da URL sem barra no final. Para ambiente remoto:
+
+```sh
+KAKEGURUI_API='https://kakegurui-bank.fly.dev'
+```
+
+Ou ambiente local:
+
+```sh
+KAKEGURUI_API='http://localhost:4000'
+```
 
 ### Cadastro de conta
 
@@ -61,7 +80,7 @@ alguns bancos fazem) durante transações mais tarde, e o formato precisa ser ma
 ser inválido (como um fácil "111.111.111-11" durante experimentos).
 
 ```sh
-curl -X POST 'http://localhost:4000/api/users' \
+curl -X POST "$KAKEGURUI_API/api/users" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -85,7 +104,7 @@ contexto lúdico de experimentação.
 Gere um token (com validade de 1 dia, de novo para facilitar experimentos):
 
 ```sh
-curl -X POST 'http://localhost:4000/api/authentication' \
+curl -X POST "$KAKEGURUI_API/api/authentication" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -d '{
@@ -105,7 +124,7 @@ E faça o teste de sanidade no token se quiser, esta rota deverá imprimir o
 primeiro nome do usuário autenticado:
 
 ```sh
-curl 'http://localhost:4000/api/authentication' \
+curl "$KAKEGURUI_API/api/authentication" \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
@@ -116,7 +135,7 @@ Efetua uma transação financeira de um montante que seu usuário possui
 para algum outro usuário identificado através do CPF:
 
 ```sh
-curl -X POST 'http://localhost:4000/api/fin_transactions' \
+curl -X POST "$KAKEGURUI_API/api/fin_transactions" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN" \
@@ -140,7 +159,7 @@ KAKEGURUI_TRANSACTION='blabla-blabla-blabla-wadda-wadda'
 E chame o endpoint de estorno:
 
 ```sh
-curl -X POST "http://localhost:4000/api/fin_transactions/$KAKEGURUI_TRANSACTION/refund" \
+curl -X POST "$KAKEGURUI_API/api/fin_transactions/$KAKEGURUI_TRANSACTION/refund" \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
@@ -163,7 +182,7 @@ Qualquer transação envolvendo seu usuário irá ser listada, inclusive as
 já estornadas para consulta histórica:
 
 ```sh
-curl 'http://localhost:4000/api/fin_transactions?from_processed_at=2023-01-01&to_processed_at=2023-12-31' \
+curl "$KAKEGURUI_API/api/fin_transactions?from_processed_at=2023-01-01&to_processed_at=2023-12-31" \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
@@ -178,7 +197,7 @@ Valor total de suas transações efetuadas e não estornadas,
 o retorno é bem simples:
 
 ```sh
-curl 'http://localhost:4000/api/balance' \
+curl "$KAKEGURUI_API/api/balance" \
     -H 'Accept: application/json' \
     -H "Authorization: Bearer $KAKEGURUI_TOKEN"
 ```
